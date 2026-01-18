@@ -1,0 +1,129 @@
+{
+  "fixture_id": "php/cron-never-runs",
+  "fixture_path": "specs/fixtures/php/cron-never-runs",
+  "profile": "php-legacy-gameserver",
+  "generated_at": "2024-01-18T00:00:00Z",
+  "expected_findings": [
+    {
+      "type": "unreachable_cron",
+      "severity": "CRITICAL",
+      "location": {
+        "file": "cron_processor.php",
+        "line": 1,
+        "column": 1
+      },
+      "message": "File appears to be cron script but no valid crontab entry references it",
+      "evidence_required": [
+        "file_analysis",
+        "crontab_scan",
+        "path_resolution"
+      ],
+      "proof_level": "P3",
+      "confidence_min": 0.85,
+      "details": {
+        "cron_indicators": [
+          "php_sapi_name() === 'cli' check at line 70",
+          "Scheduled processing patterns",
+          "CRON_SECRET constant"
+        ],
+        "crontab_status": "No entry found pointing to this file"
+      }
+    },
+    {
+      "type": "cron_path_mismatch",
+      "severity": "HIGH",
+      "location": {
+        "file": "crontab.example",
+        "line": 12,
+        "column": 1
+      },
+      "message": "Crontab entry points to 'cron_old.php' but 'cron_processor.php' is the actual cron script",
+      "evidence_required": [
+        "crontab_parse",
+        "path_comparison"
+      ],
+      "proof_level": "P3",
+      "confidence_min": 0.90
+    },
+    {
+      "type": "dead_code",
+      "severity": "HIGH",
+      "location": {
+        "file": "cron_processor.php",
+        "line": 18,
+        "column": 1
+      },
+      "message": "Function 'processBuildingQueue' is never called - entry point file not executed",
+      "evidence_required": [
+        "call_graph",
+        "entry_point_analysis"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.85
+    },
+    {
+      "type": "dead_code",
+      "severity": "HIGH",
+      "location": {
+        "file": "cron_processor.php",
+        "line": 42,
+        "column": 1
+      },
+      "message": "Function 'processResourceTick' is never called - entry point file not executed",
+      "evidence_required": [
+        "call_graph",
+        "entry_point_analysis"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.85
+    },
+    {
+      "type": "entry_point_unreachable",
+      "severity": "CRITICAL",
+      "location": {
+        "file": "cron_processor.php",
+        "line": 67,
+        "column": 1
+      },
+      "message": "Function 'runCron' is the entry point but file is never executed by cron",
+      "evidence_required": [
+        "entry_point_detection",
+        "execution_trace"
+      ],
+      "proof_level": "P3",
+      "confidence_min": 0.80
+    }
+  ],
+  "expected_metrics": {
+    "total_findings": 5,
+    "by_severity": {
+      "CRITICAL": 2,
+      "HIGH": 3
+    },
+    "confidence_range": [0.80, 0.90]
+  },
+  "forbidden_findings": [
+    {
+      "type": "dead_code",
+      "location": "runCron internal calls",
+      "reason": "runCron does call processBuildingQueue and processResourceTick - they're only dead because runCron itself is never called"
+    }
+  ],
+  "blindspots_acknowledged": [
+    "Cannot access system crontab without elevated permissions",
+    "Cannot detect if cron is invoked via external orchestration (Kubernetes, systemd timers)",
+    "Cannot verify if file is called via web hook instead of cron"
+  ],
+  "game_server_context": {
+    "affected_features": [
+      "Building completion",
+      "Resource generation",
+      "Troop training completion",
+      "Attack/raid arrival"
+    ],
+    "player_impact": "Game appears frozen. Buildings never finish. Resources don't accumulate. Players report 'my village hasn't changed in 3 days'.",
+    "common_cause": "Server migration, crontab not copied. Or developer renamed file but forgot to update crontab.",
+    "debugging_tip": "Check /var/log/cron.log for actual executions. Compare timestamps of last resource update vs current time."
+  },
+  "validation_command": "codetruth audit specs/fixtures/php/cron-never-runs --profile php-legacy-gameserver --format json"
+}

@@ -1,0 +1,351 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2024-01-18T00:00:00Z",
+  "manifest_purpose": "Honest inventory of code type coverage with proof requirements",
+  "compliance_note": "Types without fixtures+goldens are marked UNPROVEN per Contract V2",
+  "code_types": [
+    {
+      "id": "typescript-react",
+      "tier": 1,
+      "status": "PARTIAL",
+      "profile_file": "specs/language-profiles/typescript.md",
+      "parsers": ["tree-sitter-typescript", "tree-sitter-tsx"],
+      "static_proofs": ["dead_code_detection", "ui_wiring_analysis", "unused_export_detection"],
+      "dynamic_proofs": ["playwright_trace", "coverage_report"],
+      "required_tools": ["node", "npm", "typescript", "playwright"],
+      "implemented_analyzers": [
+        "codetruth/analyzers/dead_code.py:DeadCodeAnalyzer",
+        "codetruth/analyzers/ui_wiring.py:UIWiringAnalyzer"
+      ],
+      "fixtures": ["specs/fixtures/typescript-react/no-op-button", "specs/fixtures/typescript-react/dead-handler"],
+      "goldens": ["specs/goldens/typescript-react-no-op-button.json", "specs/goldens/typescript-react-dead-handler.json"],
+      "blindspots": ["dynamic imports", "HOC wrappers", "context providers", "server components"],
+      "confidence": 0.72,
+      "implementation_status": {
+        "parsing": "IMPLEMENTED",
+        "static_analysis": "PARTIAL",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      }
+    },
+    {
+      "id": "python",
+      "tier": 1,
+      "status": "PARTIAL",
+      "profile_file": "specs/language-profiles/python.md",
+      "parsers": ["tree-sitter-python"],
+      "static_proofs": ["dead_code_detection", "unreachable_code_detection", "code_marker_detection"],
+      "dynamic_proofs": ["pytest_coverage", "runtime_trace"],
+      "required_tools": ["python3", "pip", "pytest", "coverage"],
+      "implemented_analyzers": [
+        "codetruth/analyzers/dead_code.py:DeadCodeAnalyzer._analyze_python"
+      ],
+      "fixtures": ["specs/fixtures/python/unreachable-code", "specs/fixtures/python/orphan-function"],
+      "goldens": ["specs/goldens/python-unreachable-code.json", "specs/goldens/python-orphan-function.json"],
+      "blindspots": ["dynamic imports", "exec/eval", "metaclasses", "__getattr__", "decorators"],
+      "confidence": 0.68,
+      "implementation_status": {
+        "parsing": "IMPLEMENTED",
+        "static_analysis": "PARTIAL",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      }
+    },
+    {
+      "id": "javascript",
+      "tier": 1,
+      "status": "PARTIAL",
+      "profile_file": "specs/language-profiles/javascript.md",
+      "parsers": ["tree-sitter-javascript"],
+      "static_proofs": ["dead_code_detection", "export_analysis"],
+      "dynamic_proofs": ["istanbul_coverage"],
+      "required_tools": ["node", "npm"],
+      "implemented_analyzers": [
+        "codetruth/analyzers/dead_code.py:DeadCodeAnalyzer._analyze_typescript"
+      ],
+      "fixtures": ["specs/fixtures/javascript/promise-void", "specs/fixtures/javascript/dynamic-dispatch"],
+      "goldens": ["specs/goldens/javascript-promise-void.json", "specs/goldens/javascript-dynamic-dispatch.json"],
+      "blindspots": ["eval", "Function constructor", "dynamic property access", "prototype mutation"],
+      "confidence": 0.55,
+      "implementation_status": {
+        "parsing": "IMPLEMENTED",
+        "static_analysis": "PARTIAL",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      }
+    },
+    {
+      "id": "php-legacy-gameserver",
+      "tier": 2,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/php.md",
+      "parsers": ["tree-sitter-php"],
+      "static_proofs": ["route-discovery", "db-query-detection"],
+      "dynamic_proofs": ["docker-run", "http-smoke"],
+      "required_tools": ["php", "composer", "mysql", "docker"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/php/ajax-no-effect", "specs/fixtures/php/cron-never-runs"],
+      "goldens": ["specs/goldens/php-ajax-no-effect.json", "specs/goldens/php-cron-never-runs.json"],
+      "blindspots": ["runtime eval()", "dynamic include paths", "variable variables", "magic methods"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No PHP analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "csharp-gameserver",
+      "tier": 2,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/csharp.md",
+      "parsers": ["tree-sitter-c-sharp"],
+      "static_proofs": ["packet-handler-detection", "dead-npc-script"],
+      "dynamic_proofs": ["dotnet-test", "integration-smoke"],
+      "required_tools": ["dotnet", "msbuild"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/csharp/missing-packet-handler", "specs/fixtures/csharp/dead-npc-script"],
+      "goldens": ["specs/goldens/csharp-missing-packet-handler.json", "specs/goldens/csharp-dead-npc-script.json"],
+      "blindspots": ["reflection", "dynamic keyword", "IL emit", "source generators"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No C# analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "java-gameserver",
+      "tier": 2,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/java.md",
+      "parsers": ["tree-sitter-java"],
+      "static_proofs": ["packet-handler-detection", "nashorn-script-analysis"],
+      "dynamic_proofs": ["junit-test", "integration-smoke"],
+      "required_tools": ["java", "maven", "gradle"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/java/missing-packet-handler", "specs/fixtures/java/dead-quest-handler"],
+      "goldens": ["specs/goldens/java-missing-packet-handler.json", "specs/goldens/java-dead-quest-handler.json"],
+      "blindspots": ["reflection", "dynamic proxies", "Nashorn/GraalJS", "class loading"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No Java analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "lua-game-scripting",
+      "tier": 3,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/lua.md",
+      "parsers": ["tree-sitter-lua"],
+      "static_proofs": ["function-call-graph", "global-usage"],
+      "dynamic_proofs": ["lua-test"],
+      "required_tools": ["lua", "luarocks"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/lua/orphan-function", "specs/fixtures/lua/global-pollution"],
+      "goldens": ["specs/goldens/lua-orphan-function.json", "specs/goldens/lua-global-pollution.json"],
+      "blindspots": ["loadstring", "metatables", "_G manipulation", "coroutines"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No Lua analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "powershell",
+      "tier": 3,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/powershell.md",
+      "parsers": ["tree-sitter-powershell"],
+      "static_proofs": ["cmdlet-analysis", "parameter-validation"],
+      "dynamic_proofs": ["pester-test"],
+      "required_tools": ["pwsh"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/powershell/unreachable-code", "specs/fixtures/powershell/missing-param"],
+      "goldens": ["specs/goldens/powershell-unreachable-code.json", "specs/goldens/powershell-missing-param.json"],
+      "blindspots": ["Invoke-Expression", "dynamic cmdlets", "remoting", "DSC"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No PowerShell analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "html",
+      "tier": 2,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/html.md",
+      "parsers": ["tree-sitter-html"],
+      "static_proofs": ["dom-tree-construction", "form-validation", "id-uniqueness"],
+      "dynamic_proofs": ["puppeteer-dom-inspection"],
+      "required_tools": ["node"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/html/form-action-nowhere", "specs/fixtures/html/dead-id-ref"],
+      "goldens": ["specs/goldens/html-form-action-nowhere.json", "specs/goldens/html-dead-id-ref.json"],
+      "blindspots": ["template syntax", "JSX", "dynamic innerHTML"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No HTML analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "css",
+      "tier": 2,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/css.md",
+      "parsers": ["tree-sitter-css"],
+      "static_proofs": ["selector-validation", "property-validation", "unused-rule-detection"],
+      "dynamic_proofs": ["devtools-coverage"],
+      "required_tools": ["node"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/css/dead-selector", "specs/fixtures/css/specificity-hell"],
+      "goldens": ["specs/goldens/css-dead-selector.json", "specs/goldens/css-specificity-hell.json"],
+      "blindspots": ["CSS-in-JS", "dynamic classes", "CSS Modules hashing"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No CSS analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "sql",
+      "tier": 3,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/sql.md",
+      "parsers": ["tree-sitter-sql"],
+      "static_proofs": ["schema-validation", "fk-verification", "migration-ordering"],
+      "dynamic_proofs": ["database-test"],
+      "required_tools": ["mysql", "postgresql"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/sql/fk-to-nowhere", "specs/fixtures/sql/migration-disorder"],
+      "goldens": ["specs/goldens/sql-fk-to-nowhere.json", "specs/goldens/sql-migration-disorder.json"],
+      "blindspots": ["dynamic SQL", "ORM abstractions", "stored procedures"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No SQL analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "shell-bash",
+      "tier": 3,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/shell.md",
+      "parsers": ["tree-sitter-bash"],
+      "static_proofs": ["shellcheck-integration", "command-validation"],
+      "dynamic_proofs": ["bats-test"],
+      "required_tools": ["bash", "shellcheck"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/shell/undefined-variable", "specs/fixtures/shell/unreachable-code"],
+      "goldens": ["specs/goldens/shell-undefined-variable.json", "specs/goldens/shell-unreachable-code.json"],
+      "blindspots": ["eval", "source/dot", "dynamic command construction"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No Shell analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "dockerfile",
+      "tier": 3,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/dockerfile.md",
+      "parsers": ["tree-sitter-dockerfile"],
+      "static_proofs": ["hadolint-integration", "base-image-validation"],
+      "dynamic_proofs": ["docker-build-test"],
+      "required_tools": ["docker", "hadolint"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/dockerfile/unreachable-instruction", "specs/fixtures/dockerfile/missing-entrypoint"],
+      "goldens": ["specs/goldens/dockerfile-unreachable-instruction.json", "specs/goldens/dockerfile-missing-entrypoint.json"],
+      "blindspots": ["build args", "multi-stage complexity", "runtime behavior"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No Dockerfile analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "yaml-cicd",
+      "tier": 3,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/yaml.md",
+      "parsers": ["tree-sitter-yaml"],
+      "static_proofs": ["schema-validation", "reference-resolution"],
+      "dynamic_proofs": ["workflow-dry-run"],
+      "required_tools": ["yamllint"],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/yaml/invalid-reference", "specs/fixtures/yaml/unreachable-job"],
+      "goldens": ["specs/goldens/yaml-invalid-reference.json", "specs/goldens/yaml-unreachable-job.json"],
+      "blindspots": ["template expressions", "matrix expansion", "conditional jobs"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No YAML analyzer implemented. Profile exists but no code backing."
+    },
+    {
+      "id": "json-config",
+      "tier": 3,
+      "status": "UNPROVEN",
+      "profile_file": "specs/language-profiles/json.md",
+      "parsers": ["tree-sitter-json"],
+      "static_proofs": ["schema-validation", "reference-resolution"],
+      "dynamic_proofs": [],
+      "required_tools": [],
+      "implemented_analyzers": [],
+      "fixtures": ["specs/fixtures/json/schema-violation", "specs/fixtures/json/unused-config"],
+      "goldens": ["specs/goldens/json-schema-violation.json", "specs/goldens/json-unused-config.json"],
+      "blindspots": ["JSON5", "JSONC comments", "dynamic references"],
+      "confidence": 0.00,
+      "implementation_status": {
+        "parsing": "NOT_IMPLEMENTED",
+        "static_analysis": "NOT_IMPLEMENTED",
+        "dynamic_analysis": "NOT_IMPLEMENTED",
+        "reachability": "NOT_IMPLEMENTED"
+      },
+      "reason_unproven": "No JSON analyzer implemented. Profile exists but no code backing."
+    }
+  ],
+  "summary": {
+    "total_types": 15,
+    "implemented": 3,
+    "partial": 3,
+    "unproven": 12,
+    "overall_confidence": 0.13,
+    "note": "Most language profiles exist as specifications but lack implementation. Only TypeScript/React, Python, and JavaScript have partial analyzer support."
+  },
+  "honesty_statement": "This manifest honestly reflects that CodeTruth has extensive specifications but limited implementation. 12 of 15 code types are UNPROVEN because no analyzers exist for them."
+}

@@ -1,0 +1,150 @@
+{
+  "fixture_id": "php/ajax-no-effect",
+  "fixture_path": "specs/fixtures/php/ajax-no-effect",
+  "profile": "php-legacy-gameserver",
+  "generated_at": "2024-01-18T00:00:00Z",
+  "expected_findings": [
+    {
+      "type": "fake_success_return",
+      "severity": "CRITICAL",
+      "location": {
+        "file": "ajax_handler.php",
+        "line": 38,
+        "column": 5
+      },
+      "message": "Function 'handleBuildingUpgrade' returns success without any database mutation",
+      "evidence_required": [
+        "function_analysis",
+        "mutation_tracking",
+        "return_before_mutation"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.90,
+      "details": {
+        "success_value": "true",
+        "missing_mutations": [
+          "INSERT INTO building_queue",
+          "UPDATE resources"
+        ]
+      }
+    },
+    {
+      "type": "fake_success_return",
+      "severity": "CRITICAL",
+      "location": {
+        "file": "ajax_handler.php",
+        "line": 68,
+        "column": 5
+      },
+      "message": "Function 'handleTrainTroops' returns success without any database mutation",
+      "evidence_required": [
+        "function_analysis",
+        "mutation_tracking",
+        "return_before_mutation"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.90,
+      "details": {
+        "success_value": "true",
+        "missing_mutations": [
+          "INSERT INTO training_queue",
+          "UPDATE resources"
+        ]
+      }
+    },
+    {
+      "type": "hardcoded_response",
+      "severity": "HIGH",
+      "location": {
+        "file": "ajax_handler.php",
+        "line": 41,
+        "column": 9
+      },
+      "message": "Response contains hardcoded value 'new_level: 5' not derived from actual data",
+      "evidence_required": [
+        "response_analysis",
+        "data_flow_tracking"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.85
+    },
+    {
+      "type": "hardcoded_response",
+      "severity": "HIGH",
+      "location": {
+        "file": "ajax_handler.php",
+        "line": 71,
+        "column": 9
+      },
+      "message": "Response contains random fake ID (rand()) not from database",
+      "evidence_required": [
+        "response_analysis",
+        "data_flow_tracking"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.85
+    },
+    {
+      "type": "security_bypass",
+      "severity": "CRITICAL",
+      "location": {
+        "file": "ajax_handler.php",
+        "line": 78,
+        "column": 5
+      },
+      "message": "Authorization function 'userOwnsVillage' always returns true",
+      "evidence_required": [
+        "function_analysis",
+        "return_value_analysis"
+      ],
+      "proof_level": "P1",
+      "confidence_min": 0.95
+    },
+    {
+      "type": "code_marker",
+      "severity": "WARNING",
+      "location": {
+        "file": "ajax_handler.php",
+        "line": 77,
+        "column": 5
+      },
+      "message": "TODO: Actually check database",
+      "evidence_required": [
+        "comment_scan"
+      ],
+      "proof_level": "P1",
+      "confidence_min": 1.00
+    }
+  ],
+  "expected_metrics": {
+    "total_findings": 6,
+    "by_severity": {
+      "CRITICAL": 3,
+      "HIGH": 2,
+      "WARNING": 1
+    },
+    "confidence_range": [0.85, 1.00]
+  },
+  "forbidden_findings": [
+    {
+      "type": "fake_success_return",
+      "location": "userOwnsVillage",
+      "reason": "This is a read-only function, not expected to mutate"
+    }
+  ],
+  "blindspots_acknowledged": [
+    "Cannot trace mutations through external function calls",
+    "Cannot verify database connection actually works",
+    "Cannot detect mutations in included files"
+  ],
+  "game_server_context": {
+    "affected_features": [
+      "Building upgrade queue",
+      "Troop training",
+      "Resource spending"
+    ],
+    "player_impact": "Players click 'Upgrade' but nothing happens. Resources appear unchanged. Building level stays the same.",
+    "common_cause": "Copy-paste development - success response added before implementing actual logic"
+  },
+  "validation_command": "codetruth audit specs/fixtures/php/ajax-no-effect --profile php-legacy-gameserver --format json"
+}

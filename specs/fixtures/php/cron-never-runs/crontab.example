@@ -1,0 +1,18 @@
+# FIXTURE: Crontab Configuration
+#
+# This file shows what the crontab SHOULD look like, but in this fixture
+# the actual crontab is either missing or has the wrong path.
+#
+# EXPECTED FINDING: The cron_processor.php file is never invoked
+
+# CORRECT configuration (not actually installed):
+# */5 * * * * php /var/www/game/cron_processor.php >> /var/log/cron.log 2>&1
+
+# ACTUAL configuration (WRONG - points to different file):
+*/5 * * * * php /var/www/game/cron_old.php >> /var/log/cron.log 2>&1
+
+# Or the entry might be commented out:
+# */5 * * * * php /var/www/game/cron_processor.php >> /var/log/cron.log 2>&1
+
+# Or the path might be wrong:
+*/5 * * * * php /var/www/html/cron_processor.php >> /var/log/cron.log 2>&1

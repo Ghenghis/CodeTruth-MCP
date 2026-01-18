@@ -1,0 +1,96 @@
+{
+  "fixture_id": "typescript-react/dead-handler",
+  "fixture_path": "specs/fixtures/typescript-react/dead-handler",
+  "profile": "typescript-react",
+  "generated_at": "2024-01-18T00:00:00Z",
+  "expected_findings": [
+    {
+      "type": "unused_handler",
+      "severity": "WARNING",
+      "location": {
+        "file": "DeadHandler.tsx",
+        "line": 22,
+        "column": 3
+      },
+      "message": "Handler 'handleLogin' is defined but never used in component",
+      "evidence_required": [
+        "handler_inventory",
+        "usage_analysis",
+        "cross_reference"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.85
+    },
+    {
+      "type": "unused_handler",
+      "severity": "WARNING",
+      "location": {
+        "file": "DeadHandler.tsx",
+        "line": 32,
+        "column": 3
+      },
+      "message": "Handler 'handleLogout' is defined but never used in component",
+      "evidence_required": [
+        "handler_inventory",
+        "usage_analysis",
+        "cross_reference"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.85
+    },
+    {
+      "type": "unused_handler",
+      "severity": "WARNING",
+      "location": {
+        "file": "DeadHandler.tsx",
+        "line": 38,
+        "column": 3
+      },
+      "message": "Handler 'handleDataExport' is defined but never used in component",
+      "evidence_required": [
+        "handler_inventory",
+        "usage_analysis",
+        "cross_reference"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.85
+    },
+    {
+      "type": "missing_reference",
+      "severity": "ERROR",
+      "location": {
+        "file": "DeadHandler.tsx",
+        "line": 58,
+        "column": 25
+      },
+      "message": "Reference to 'handleMissing' which is declared but not defined (ambient declaration)",
+      "evidence_required": [
+        "reference_analysis",
+        "definition_lookup"
+      ],
+      "proof_level": "P1",
+      "confidence_min": 0.95
+    }
+  ],
+  "expected_metrics": {
+    "total_findings": 4,
+    "by_severity": {
+      "ERROR": 1,
+      "WARNING": 3
+    },
+    "confidence_range": [0.85, 0.95]
+  },
+  "forbidden_findings": [
+    {
+      "type": "unused_handler",
+      "location": "handleRefresh",
+      "reason": "handleRefresh IS used - bound to button onClick"
+    }
+  ],
+  "blindspots_acknowledged": [
+    "Cannot trace handlers exported for external use",
+    "Cannot verify handlers passed via props to children",
+    "Cannot trace handlers used in useEffect dependencies"
+  ],
+  "validation_command": "codetruth audit specs/fixtures/typescript-react/dead-handler --profile typescript-react --format json"
+}

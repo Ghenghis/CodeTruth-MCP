@@ -1,0 +1,93 @@
+{
+  "fixture_id": "typescript-react/no-op-button",
+  "fixture_path": "specs/fixtures/typescript-react/no-op-button",
+  "profile": "typescript-react",
+  "generated_at": "2024-01-18T00:00:00Z",
+  "expected_findings": [
+    {
+      "type": "empty_handler",
+      "severity": "HIGH",
+      "location": {
+        "file": "NoOpButton.tsx",
+        "line": 20,
+        "column": 3
+      },
+      "message": "Handler 'handleClick' has empty body - does nothing when invoked",
+      "evidence_required": [
+        "ast_analysis",
+        "handler_body_check"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.90
+    },
+    {
+      "type": "debug_only_handler",
+      "severity": "MEDIUM",
+      "location": {
+        "file": "NoOpButton.tsx",
+        "line": 25,
+        "column": 3
+      },
+      "message": "Handler 'handleSubmit' only contains console.log - likely placeholder",
+      "evidence_required": [
+        "ast_analysis",
+        "handler_body_check"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.85
+    },
+    {
+      "type": "unused_handler",
+      "severity": "WARNING",
+      "location": {
+        "file": "NoOpButton.tsx",
+        "line": 29,
+        "column": 3
+      },
+      "message": "Handler 'handleUnused' is defined but never bound to any element",
+      "evidence_required": [
+        "handler_inventory",
+        "usage_analysis"
+      ],
+      "proof_level": "P2",
+      "confidence_min": 0.85
+    },
+    {
+      "type": "button_no_handler",
+      "severity": "LOW",
+      "location": {
+        "file": "NoOpButton.tsx",
+        "line": 46,
+        "column": 7
+      },
+      "message": "Button element without onClick handler",
+      "evidence_required": [
+        "element_analysis"
+      ],
+      "proof_level": "P5",
+      "confidence_min": 0.60
+    }
+  ],
+  "expected_metrics": {
+    "total_findings": 4,
+    "by_severity": {
+      "HIGH": 1,
+      "MEDIUM": 1,
+      "WARNING": 1,
+      "LOW": 1
+    },
+    "confidence_range": [0.60, 0.90]
+  },
+  "forbidden_findings": [
+    {
+      "type": "unused_export",
+      "reason": "The default export may be used externally - cannot prove unused"
+    }
+  ],
+  "blindspots_acknowledged": [
+    "Cannot verify if handlers are passed to child components",
+    "Cannot trace handlers through HOC wrappers",
+    "Console.log may be intentional debugging"
+  ],
+  "validation_command": "codetruth audit specs/fixtures/typescript-react/no-op-button --profile typescript-react --format json"
+}

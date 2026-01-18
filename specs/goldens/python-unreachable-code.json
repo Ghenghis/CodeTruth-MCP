@@ -1,0 +1,68 @@
+{
+  "fixture_id": "python/unreachable-code",
+  "fixture_path": "specs/fixtures/python/unreachable-code",
+  "profile": "python",
+  "generated_at": "2024-01-18T00:00:00Z",
+  "expected_findings": [
+    {
+      "type": "unreachable_code",
+      "severity": "WARNING",
+      "location": {
+        "file": "unreachable.py",
+        "line": 16,
+        "column": 9
+      },
+      "message": "Unreachable code after return statement",
+      "evidence_required": ["control_flow_analysis"],
+      "proof_level": "P2",
+      "confidence_min": 0.90
+    },
+    {
+      "type": "unreachable_code",
+      "severity": "WARNING",
+      "location": {
+        "file": "unreachable.py",
+        "line": 25,
+        "column": 9
+      },
+      "message": "Unreachable code after raise statement",
+      "evidence_required": ["control_flow_analysis"],
+      "proof_level": "P2",
+      "confidence_min": 0.90
+    },
+    {
+      "type": "code_marker",
+      "severity": "NOTE",
+      "location": {
+        "file": "unreachable.py",
+        "line": 39,
+        "column": 1
+      },
+      "message": "TODO: Fix unreachable code above",
+      "evidence_required": ["comment_scan"],
+      "proof_level": "P1",
+      "confidence_min": 1.00
+    },
+    {
+      "type": "code_marker",
+      "severity": "WARNING",
+      "location": {
+        "file": "unreachable.py",
+        "line": 40,
+        "column": 1
+      },
+      "message": "FIXME: This function has issues",
+      "evidence_required": ["comment_scan"],
+      "proof_level": "P1",
+      "confidence_min": 1.00
+    }
+  ],
+  "expected_metrics": {
+    "total_findings": 4,
+    "by_severity": {
+      "WARNING": 3,
+      "NOTE": 1
+    }
+  },
+  "validation_command": "codetruth audit specs/fixtures/python/unreachable-code --profile python --format json"
+}
