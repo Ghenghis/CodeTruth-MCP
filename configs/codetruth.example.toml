@@ -1,0 +1,114 @@
+# CodeTruth Configuration Example
+# Copy to codetruth.toml in your project root
+
+[codetruth]
+# Default analysis profile: fast, standard, deep, forensics
+profile = "standard"
+
+# Debug mode
+debug = false
+log_level = "INFO"
+
+[codetruth.gates]
+# Which quality gates to run (0-6)
+enabled = [0, 1, 2, 3, 4, 5]
+
+# Stop on first failure
+fail_fast = false
+
+# Thresholds
+coverage_threshold = 80.0
+lint_error_threshold = 0
+type_error_threshold = 0
+security_critical_threshold = 0
+
+[codetruth.analyzers.python]
+enabled = true
+type_checker = "mypy"  # mypy, pyright
+linter = "ruff"  # ruff, flake8, pylint
+formatter = "black"
+
+[codetruth.analyzers.typescript]
+enabled = true
+strict = true
+linter = "eslint"
+formatter = "prettier"
+
+[codetruth.analyzers.react]
+enabled = true
+check_hooks_rules = true
+check_prop_types = true
+check_accessibility = true
+
+[codetruth.analyzers.security]
+gitleaks_enabled = true
+trufflehog_enabled = false
+trufflehog_verify = false
+
+semgrep_enabled = true
+semgrep_rulesets = ["p/default", "p/owasp-top-ten", "p/security-audit"]
+
+dependency_scan_enabled = true
+osv_enabled = true
+trivy_enabled = false
+
+[codetruth.e2e]
+enabled = true
+browser = "chromium"  # chromium, firefox, webkit
+headless = true
+trace = "on-first-retry"
+video = "retain-on-failure"
+screenshot = "only-on-failure"
+timeout = 30000
+
+[codetruth.docker]
+enabled = true
+image = "codetruth-sandbox:latest"
+memory_limit = "2g"
+cpu_limit = 2.0
+timeout = 600
+network_mode = "none"
+
+[codetruth.storage]
+# SQLite (default)
+sqlite_enabled = true
+sqlite_path = "~/.codetruth/evidence.db"
+
+# Supabase (optional)
+supabase_enabled = false
+# supabase_url = "http://localhost:54321"
+# supabase_key = ""
+
+# Mem0 AI Memory
+mem0_enabled = true
+# mem0_api_key = ""
+
+# Analysis profiles
+[codetruth.profiles.fast]
+gates = [0, 1]
+analyzers = ["lint", "type_check"]
+e2e = false
+coverage = false
+
+[codetruth.profiles.standard]
+gates = [0, 1, 2, 3, 4, 5]
+analyzers = ["lint", "type_check", "dead_code", "ui_wiring", "security", "dependencies"]
+e2e = true
+coverage = true
+
+[codetruth.profiles.deep]
+gates = [0, 1, 2, 3, 4, 5, 6]
+analyzers = "all"
+e2e = true
+coverage = true
+visual_regression = true
+
+[codetruth.profiles.forensics]
+gates = [0, 1, 2, 3, 4, 5, 6]
+analyzers = "all"
+e2e = true
+e2e_trace = true
+e2e_video = true
+coverage = true
+visual_regression = true
+trace_correlation = true

@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  codetruth:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    volumes:
+      - ../:/workspace:ro
+      - codetruth-data:/home/codetruth/.codetruth
+    working_dir: /workspace
+    environment:
+      - CODETRUTH_PROFILE=standard
+      - CODETRUTH_LOG_LEVEL=INFO
+    command: ["audit", "/workspace"]
+
+  # Optional: Local Supabase for persistent storage
+  supabase-db:
+    image: supabase/postgres:15.1.0.54
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: codetruth
+    volumes:
+      - supabase-data:/var/lib/postgresql/data
+    profiles:
+      - supabase
+
+  # Optional: Ollama for local AI
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama-data:/root/.ollama
+    profiles:
+      - ai
+
+volumes:
+  codetruth-data:
+  supabase-data:
+  ollama-data:

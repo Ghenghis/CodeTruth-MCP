@@ -1,0 +1,140 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "codetruth-mcp"
+version = "0.1.0"
+description = "Evidence-Based Code Auditing MCP Server - No claims without proof"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [
+    { name = "CodeTruth Team" }
+]
+keywords = [
+    "mcp",
+    "code-audit",
+    "static-analysis",
+    "code-quality",
+    "security",
+    "evidence-based"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Testing",
+]
+
+dependencies = [
+    # MCP Protocol
+    "mcp>=1.0.0",
+
+    # Core
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "typer>=0.9.0",
+    "rich>=13.0.0",
+    "toml>=0.10.0",
+
+    # Database & Storage
+    "aiosqlite>=0.19.0",
+    "sqlalchemy>=2.0.0",
+
+    # AST Parsing
+    "tree-sitter>=0.21.0",
+    "tree-sitter-language-pack>=0.1.0",
+
+    # AI Memory
+    "mem0ai>=1.0.0",
+
+    # HTTP & Async
+    "httpx>=0.25.0",
+    "aiofiles>=23.0.0",
+
+    # Analysis Tools
+    "semgrep>=1.50.0",
+
+    # Testing & E2E
+    "playwright>=1.40.0",
+
+    # Reporting
+    "jinja2>=3.1.0",
+
+    # Graph Analysis
+    "networkx>=3.0",
+
+    # SARIF
+    "sarif-om>=1.0.0",
+
+    # Process Management
+    "psutil>=5.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+]
+
+supabase = [
+    "supabase>=2.0.0",
+]
+
+all = [
+    "codetruth-mcp[dev,supabase]",
+]
+
+[project.scripts]
+codetruth = "codetruth.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/CodeTruth-MCP"
+Documentation = "https://github.com/yourusername/CodeTruth-MCP#readme"
+Repository = "https://github.com/yourusername/CodeTruth-MCP"
+Issues = "https://github.com/yourusername/CodeTruth-MCP/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/codetruth"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-v --cov=codetruth --cov-report=term-missing"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
