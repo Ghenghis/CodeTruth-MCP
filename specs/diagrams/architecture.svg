@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #1a1a2e; }
+      .subtitle { font: 16px sans-serif; fill: #4a4a6a; }
+      .box-label { font: bold 14px sans-serif; fill: white; }
+      .box-detail { font: 12px sans-serif; fill: #e0e0e0; }
+      .arrow { stroke: #4a4a6a; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-label { font: 11px sans-serif; fill: #4a4a6a; }
+      .engine-box { fill: #16213e; rx: 8; }
+      .analyzer-box { fill: #1a1a2e; rx: 8; }
+      .evidence-box { fill: #0f3460; rx: 8; }
+      .output-box { fill: #e94560; rx: 8; }
+      .input-box { fill: #533483; rx: 8; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#4a4a6a" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="900" fill="#f5f5f5"/>
+
+  <!-- Title -->
+  <text x="600" y="40" text-anchor="middle" class="title">CodeTruth-MCP Architecture</text>
+  <text x="600" y="65" text-anchor="middle" class="subtitle">Evidence-Based Code Auditing System</text>
+
+  <!-- Input Layer -->
+  <g transform="translate(50, 100)">
+    <text x="100" y="0" class="subtitle" font-weight="bold">INPUT LAYER</text>
+
+    <rect x="0" y="20" width="200" height="80" class="input-box"/>
+    <text x="100" y="55" text-anchor="middle" class="box-label">Source Code</text>
+    <text x="100" y="75" text-anchor="middle" class="box-detail">*.ts, *.tsx, *.py, *.php</text>
+
+    <rect x="220" y="20" width="200" height="80" class="input-box"/>
+    <text x="320" y="55" text-anchor="middle" class="box-label">Runtime Traces</text>
+    <text x="320" y="75" text-anchor="middle" class="box-detail">HAR, coverage, logs</text>
+
+    <rect x="440" y="20" width="200" height="80" class="input-box"/>
+    <text x="540" y="55" text-anchor="middle" class="box-label">Test Results</text>
+    <text x="540" y="75" text-anchor="middle" class="box-detail">pytest, jest, playwright</text>
+  </g>
+
+  <!-- Analyzers Layer -->
+  <g transform="translate(50, 230)">
+    <text x="100" y="0" class="subtitle" font-weight="bold">ANALYZERS</text>
+
+    <rect x="0" y="20" width="150" height="70" class="analyzer-box"/>
+    <text x="75" y="50" text-anchor="middle" class="box-label">Dead Code</text>
+    <text x="75" y="68" text-anchor="middle" class="box-detail">Analyzer</text>
+
+    <rect x="170" y="20" width="150" height="70" class="analyzer-box"/>
+    <text x="245" y="50" text-anchor="middle" class="box-label">UI Wiring</text>
+    <text x="245" y="68" text-anchor="middle" class="box-detail">Analyzer</text>
+
+    <rect x="340" y="20" width="150" height="70" class="analyzer-box"/>
+    <text x="415" y="50" text-anchor="middle" class="box-label">Type Check</text>
+    <text x="415" y="68" text-anchor="middle" class="box-detail">Analyzer</text>
+
+    <rect x="510" y="20" width="150" height="70" class="analyzer-box"/>
+    <text x="585" y="50" text-anchor="middle" class="box-label">SAST</text>
+    <text x="585" y="68" text-anchor="middle" class="box-detail">Analyzer</text>
+  </g>
+
+  <!-- Engines Layer (P0) -->
+  <g transform="translate(50, 370)">
+    <text x="100" y="0" class="subtitle" font-weight="bold">P0 ENGINES (Core Truth Determination)</text>
+
+    <rect x="0" y="20" width="260" height="100" class="engine-box"/>
+    <text x="130" y="50" text-anchor="middle" class="box-label">Reachability Proof Engine</text>
+    <text x="130" y="70" text-anchor="middle" class="box-detail">Graph: nodes + edges</text>
+    <text x="130" y="88" text-anchor="middle" class="box-detail">Proofs: reachable / unreachable</text>
+    <text x="130" y="106" text-anchor="middle" class="box-detail">Cut sets: missing links</text>
+
+    <rect x="280" y="20" width="260" height="100" class="engine-box"/>
+    <text x="410" y="50" text-anchor="middle" class="box-label">UI No-Op Verifier</text>
+    <text x="410" y="70" text-anchor="middle" class="box-detail">Elements: buttons, forms, links</text>
+    <text x="410" y="88" text-anchor="middle" class="box-detail">Effects: network, DOM, state</text>
+    <text x="410" y="106" text-anchor="middle" class="box-detail">No-Op detection: empty handlers</text>
+
+    <rect x="560" y="20" width="260" height="100" class="engine-box"/>
+    <text x="690" y="50" text-anchor="middle" class="box-label">Runtime Correlator</text>
+    <text x="690" y="70" text-anchor="middle" class="box-detail">Contradiction detection</text>
+    <text x="690" y="88" text-anchor="middle" class="box-detail">Evidence precedence</text>
+    <text x="690" y="106" text-anchor="middle" class="box-detail">Truth decision: COMPLETE/BROKEN</text>
+
+    <rect x="840" y="20" width="260" height="100" class="engine-box"/>
+    <text x="970" y="50" text-anchor="middle" class="box-label">Boundary Verifier</text>
+    <text x="970" y="70" text-anchor="middle" class="box-detail">Cross-language contracts</text>
+    <text x="970" y="88" text-anchor="middle" class="box-detail">API schema validation</text>
+    <text x="970" y="106" text-anchor="middle" class="box-detail">Dependency verification</text>
+  </g>
+
+  <!-- Evidence Layer -->
+  <g transform="translate(50, 530)">
+    <text x="100" y="0" class="subtitle" font-weight="bold">EVIDENCE VAULT</text>
+
+    <rect x="0" y="20" width="180" height="80" class="evidence-box"/>
+    <text x="90" y="50" text-anchor="middle" class="box-label">Trust Levels</text>
+    <text x="90" y="68" text-anchor="middle" class="box-detail">T0: VERIFIED</text>
+    <text x="90" y="83" text-anchor="middle" class="box-detail">T1-T4: degrading</text>
+
+    <rect x="200" y="20" width="180" height="80" class="evidence-box"/>
+    <text x="290" y="50" text-anchor="middle" class="box-label">Proof Levels</text>
+    <text x="290" y="68" text-anchor="middle" class="box-detail">P0: FORMAL</text>
+    <text x="290" y="83" text-anchor="middle" class="box-detail">P1-P7: degrading</text>
+
+    <rect x="400" y="20" width="180" height="80" class="evidence-box"/>
+    <text x="490" y="50" text-anchor="middle" class="box-label">Evidence Hash</text>
+    <text x="490" y="68" text-anchor="middle" class="box-detail">SHA-256</text>
+    <text x="490" y="83" text-anchor="middle" class="box-detail">Reproducibility</text>
+
+    <rect x="600" y="20" width="180" height="80" class="evidence-box"/>
+    <text x="690" y="50" text-anchor="middle" class="box-label">Expiry Rules</text>
+    <text x="690" y="68" text-anchor="middle" class="box-detail">Time-based decay</text>
+    <text x="690" y="83" text-anchor="middle" class="box-detail">Confidence degrade</text>
+  </g>
+
+  <!-- Output Layer -->
+  <g transform="translate(50, 670)">
+    <text x="100" y="0" class="subtitle" font-weight="bold">OUTPUT</text>
+
+    <rect x="0" y="20" width="200" height="80" class="output-box"/>
+    <text x="100" y="50" text-anchor="middle" class="box-label">Truth Table</text>
+    <text x="100" y="68" text-anchor="middle" class="box-detail">Feature → Decision</text>
+    <text x="100" y="83" text-anchor="middle" class="box-detail">+ evidence chain</text>
+
+    <rect x="220" y="20" width="200" height="80" class="output-box"/>
+    <text x="320" y="50" text-anchor="middle" class="box-label">Audit Report</text>
+    <text x="320" y="68" text-anchor="middle" class="box-detail">Findings + severity</text>
+    <text x="320" y="83" text-anchor="middle" class="box-detail">Blindspots declared</text>
+
+    <rect x="440" y="20" width="200" height="80" class="output-box"/>
+    <text x="540" y="50" text-anchor="middle" class="box-label">Reachability Graph</text>
+    <text x="540" y="68" text-anchor="middle" class="box-detail">JSON + SVG</text>
+    <text x="540" y="83" text-anchor="middle" class="box-detail">Exportable</text>
+
+    <rect x="660" y="20" width="200" height="80" class="output-box"/>
+    <text x="760" y="50" text-anchor="middle" class="box-label">Self-Audit</text>
+    <text x="760" y="68" text-anchor="middle" class="box-detail">Fixtures vs Goldens</text>
+    <text x="760" y="83" text-anchor="middle" class="box-detail">PASS / FAIL</text>
+  </g>
+
+  <!-- Arrows -->
+  <!-- Input to Analyzers -->
+  <path d="M 150 200 L 150 250" class="arrow"/>
+  <path d="M 370 200 L 370 250" class="arrow"/>
+  <path d="M 590 200 L 590 250" class="arrow"/>
+
+  <!-- Analyzers to Engines -->
+  <path d="M 125 320 L 125 390" class="arrow"/>
+  <path d="M 295 320 L 460 390" class="arrow"/>
+  <path d="M 465 320 L 740 390" class="arrow"/>
+  <path d="M 635 320 L 1020 390" class="arrow"/>
+
+  <!-- Engines to Evidence -->
+  <path d="M 180 490 L 180 550" class="arrow"/>
+  <path d="M 460 490 L 390 550" class="arrow"/>
+  <path d="M 740 490 L 590 550" class="arrow"/>
+  <path d="M 1020 490 L 790 550" class="arrow"/>
+
+  <!-- Evidence to Output -->
+  <path d="M 150 630 L 150 690" class="arrow"/>
+  <path d="M 340 630 L 370 690" class="arrow"/>
+  <path d="M 540 630 L 590 690" class="arrow"/>
+  <path d="M 740 630 L 810 690" class="arrow"/>
+
+  <!-- Legend -->
+  <g transform="translate(900, 100)">
+    <text x="0" y="0" class="subtitle" font-weight="bold">Legend</text>
+
+    <rect x="0" y="15" width="20" height="15" class="input-box"/>
+    <text x="30" y="27" class="box-detail" fill="#333">Input Sources</text>
+
+    <rect x="0" y="40" width="20" height="15" class="analyzer-box"/>
+    <text x="30" y="52" class="box-detail" fill="#333">Analyzers</text>
+
+    <rect x="0" y="65" width="20" height="15" class="engine-box"/>
+    <text x="30" y="77" class="box-detail" fill="#333">P0 Engines (Core)</text>
+
+    <rect x="0" y="90" width="20" height="15" class="evidence-box"/>
+    <text x="30" y="102" class="box-detail" fill="#333">Evidence Vault</text>
+
+    <rect x="0" y="115" width="20" height="15" class="output-box"/>
+    <text x="30" y="127" class="box-detail" fill="#333">Output Artifacts</text>
+  </g>
+
+  <!-- Version -->
+  <text x="1150" y="880" text-anchor="end" font-size="10" fill="#999">CodeTruth-MCP v1.0.0</text>
+</svg>

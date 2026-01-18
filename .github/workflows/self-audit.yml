@@ -1,0 +1,182 @@
+name: CodeTruth Self-Audit
+
+on:
+  push:
+    branches: [main, claude/*]
+  pull_request:
+    branches: [main]
+
+jobs:
+  self-audit:
+    name: Run Self-Audit (Fixtures vs Goldens)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest pytest-cov
+
+      - name: Run Self-Audit
+        run: |
+          python -m codetruth.self_audit --specs-dir specs --output self-audit-report.json --verbose
+
+      - name: Upload Self-Audit Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: self-audit-report
+          path: self-audit-report.json
+
+      - name: Check Self-Audit Result
+        run: |
+          if grep -q '"overall_pass": false' self-audit-report.json; then
+            echo "❌ SELF-AUDIT FAILED"
+            echo "CodeTruth cannot claim readiness until all fixtures pass."
+            cat self-audit-report.json
+            exit 1
+          else
+            echo "✅ SELF-AUDIT PASSED"
+          fi
+
+  golden-tests:
+    name: Golden Output Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest pytest-cov
+
+      - name: Run Golden Tests
+        run: |
+          pytest tests/test_goldens*.py -v --tb=short
+
+  manifest-consistency:
+    name: Manifest Consistency Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check Manifest Consistency
+        run: |
+          echo "Checking COVERAGE_MANIFEST.json consistency..."
+
+          # Check that every code type with fixtures has goldens
+          python3 << 'EOF'
+          import json
+          import os
+          from pathlib import Path
+
+          manifest_path = Path("specs/COVERAGE_MANIFEST.json")
+          fixtures_dir = Path("specs/fixtures")
+          goldens_dir = Path("specs/goldens")
+
+          if not manifest_path.exists():
+              print("❌ COVERAGE_MANIFEST.json not found")
+              exit(1)
+
+          with open(manifest_path) as f:
+              manifest = json.load(f)
+
+          errors = []
+
+          for code_type in manifest.get("code_types", []):
+              type_id = code_type["id"]
+              fixtures = code_type.get("fixtures", [])
+              goldens = code_type.get("goldens", [])
+
+              # Check fixtures reference goldens
+              if len(fixtures) != len(goldens):
+                  errors.append(f"{type_id}: {len(fixtures)} fixtures but {len(goldens)} goldens")
+
+              # Check status consistency
+              status = code_type.get("status")
+              impl_status = code_type.get("implementation_status", {})
+
+              if status == "FULL":
+                  if not all(v == "IMPLEMENTED" for v in impl_status.values()):
+                      errors.append(f"{type_id}: Status FULL but not all implementations complete")
+
+          if errors:
+              print("❌ Manifest consistency errors:")
+              for e in errors:
+                  print(f"  - {e}")
+              exit(1)
+          else:
+              print("✅ Manifest is consistent")
+          EOF
+
+  spec-code-alignment:
+    name: Spec-Code Alignment Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for Forbidden Patterns
+        run: |
+          echo "Checking for forbidden patterns in specs..."
+
+          # Check for TODO in spec files (except in UNPROVEN sections)
+          forbidden_patterns=("TODO:" "FIXME:" "placeholder" "will implement" "next step" "later")
+
+          errors=0
+          for pattern in "${forbidden_patterns[@]}"; do
+            matches=$(grep -r "$pattern" specs/*.md specs/**/*.md 2>/dev/null | grep -v "UNPROVEN" | grep -v "blindspot" || true)
+            if [ -n "$matches" ]; then
+              echo "❌ Found forbidden pattern '$pattern':"
+              echo "$matches"
+              errors=$((errors + 1))
+            fi
+          done
+
+          if [ $errors -gt 0 ]; then
+            echo "❌ Spec-code alignment failed: found forbidden patterns"
+            exit 1
+          else
+            echo "✅ No forbidden patterns found"
+          fi
+
+  no-empty-directories:
+    name: No Empty Fixture Directories
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for Empty Fixture Directories
+        run: |
+          echo "Checking for empty fixture directories..."
+
+          empty_dirs=$(find specs/fixtures -type d -empty 2>/dev/null || true)
+          if [ -n "$empty_dirs" ]; then
+            echo "❌ Found empty fixture directories:"
+            echo "$empty_dirs"
+            exit 1
+          else
+            echo "✅ No empty fixture directories"
+          fi
