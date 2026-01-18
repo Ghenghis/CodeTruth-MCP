@@ -23,7 +23,10 @@ class NodeType(Enum):
     ROUTE = "route"                      # /api/users, /admin/*
     HANDLER = "handler"                  # Route handler, event handler
     FUNCTION = "function"                # Regular function/method
+    METHOD = "method"                    # Class method
     CLASS = "class"                      # Class definition
+    INTERFACE = "interface"              # Interface definition
+    ENUM = "enum"                        # Enum definition
     SQL_QUERY = "sql_query"              # Database query
     PROCESS_SPAWN = "process_spawn"      # subprocess, exec, spawn
     FILE_WRITE = "file_write"            # File system writes
@@ -34,13 +37,16 @@ class NodeType(Enum):
     HOOK = "hook"                        # React hook (useState, useEffect)
     MIDDLEWARE = "middleware"            # Express/FastAPI middleware
     CRON_JOB = "cron_job"               # Scheduled task
+    SCHEDULED_TASK = "scheduled_task"    # Scheduled/cron task
     MESSAGE_HANDLER = "message_handler"  # Queue/event listener
     PACKET_HANDLER = "packet_handler"    # Game server packet handler
+    STATE = "state"                      # State node (for analysis markers)
 
 
 class EdgeType(Enum):
     """Types of edges connecting nodes."""
     IMPORTS = "imports"           # import x from y
+    INCLUDES = "includes"         # PHP include/require
     CALLS = "calls"               # function call
     DISPATCHES = "dispatches"     # event dispatch
     MOUNTS = "mounts"             # route mounting
@@ -53,7 +59,10 @@ class EdgeType(Enum):
     BINDS = "binds"               # Event binding
     REGISTERS = "registers"       # Handler registration
     INHERITS = "inherits"         # Class inheritance
+    EXTENDS = "extends"           # Class extension
     IMPLEMENTS = "implements"     # Interface implementation
+    INSTANTIATES = "instantiates" # Object creation
+    MUTATES = "mutates"           # State mutation
     LISTENS = "listens"           # Event listener
 
 
